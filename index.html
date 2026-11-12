@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f5ef">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="输入参会单位名称或关键词，查询招聘双选会展位号。">
+  <title>双选会展位查询</title>
+  <style>
+:root {
+  color-scheme: light;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  color: #172c23;
+  background: #f2f5ef;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; padding-bottom: 48px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible { outline: 3px solid #1c805a; outline-offset: 3px; }
+.shell { width: min(100% - 48px, 900px); margin-inline: auto; }
+
+.masthead { display: flex; align-items: center; min-height: 74px; }
+.brand { display: flex; align-items: center; gap: 11px; font-size: 15px; font-weight: 700; letter-spacing: .06em; }
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  padding: 8px;
+  border-radius: 9px;
+  background: #204c39;
+}
+.brand-mark i { background: #daefd2; border-radius: 1px; }
+.brand-mark i:nth-child(2) { background: #8ed4a6; }
+
+.hero {
+  position: relative;
+  display: flex;
+  min-height: 236px;
+  padding: 44px 46px 67px;
+  overflow: hidden;
+  border-radius: 23px;
+  background: radial-gradient(ellipse at 100% 30%, #2c634a, transparent 65%), #153c2c;
+  color: #f8fdf6;
+}
+.hero-copy { position: relative; z-index: 1; align-self: center; }
+h1 { margin: 0 0 13px; font-size: clamp(36px, 6vw, 57px); letter-spacing: .02em; line-height: 1.13; }
+.hero p { margin: 0; font-size: 16px; line-height: 1.6; color: #d3e7d7; }
+.booth-art {
+  position: absolute;
+  right: 40px;
+  top: 31px;
+  width: 214px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  transform: rotate(-12deg);
+}
+.booth-art span {
+  aspect-ratio: 1;
+  border-radius: 11px;
+  border: 1px solid #b6e5b852;
+  background: #c9efc211;
+}
+.booth-art .booth-highlight {
+  display: grid;
+  place-items: center;
+  border-color: #b3e4a8;
+  background: #b3e4a8;
+}
+.booth-highlight::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border: 4px solid #245a3e;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-34deg);
+}
+
+.search-card {
+  position: relative;
+  margin: -29px 20px 0;
+  padding: 27px 28px 24px;
+  border: 1px solid #dce5dc;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 10px 26px #153c2c0e;
+}
+label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; }
+.search-row { display: flex; gap: 10px; }
+.input-wrap {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px 0 15px;
+  min-height: 54px;
+  border: 1px solid #bfcfc4;
+  border-radius: 10px;
+  background: #fbfdfb;
+}
+.input-wrap:focus-within { border-color: #2a7854; outline: 2px solid #bde2c9; }
+.magnifier {
+  width: 15px;
+  height: 15px;
+  position: relative;
+  flex: none;
+  border: 1.8px solid #4c695a;
+  border-radius: 50%;
+  margin: 0 2px 3px 0;
+}
+.magnifier::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 1.8px;
+  top: 11px;
+  left: 10px;
+  background: #4c695a;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #172c23;
+  font-size: 16px;
+  appearance: none;
+}
+input::placeholder { color: #64786c; opacity: 1; }
+input::-webkit-search-cancel-button { display: none; }
+.clear-button {
+  flex: none;
+  width: 34px;
+  height: 36px;
+  padding: 0;
+  color: #456458;
+  font-size: 24px;
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+}
+.clear-button:hover { background: #e9f3eb; }
+.search-button {
+  flex: none;
+  min-width: 90px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #256345;
+  color: #fff;
+  font-weight: 700;
+}
+.search-button:hover { background: #174f35; }
+.form-message { margin: 9px 0 0; color: #a13026; font-size: 14px; }
+.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 16px; }
+.examples span { margin-right: 4px; color: #52685a; font-size: 13px; }
+.examples button {
+  min-height: 32px;
+  padding: 3px 11px;
+  background: #f0f6ef;
+  color: #24523d;
+  border: 1px solid #deeadc;
+  border-radius: 999px;
+  font-size: 13px;
+}
+.examples button:hover { background: #e1efe0; }
+.results { margin: 23px 20px 0; }
+.result-status { margin: 0 0 11px; color: #435f50; font-size: 14px; line-height: 1.5; }
+.result-list { display: grid; gap: 9px; list-style: none; margin: 0; padding: 0; }
+.result-item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 11px 16px 11px 11px;
+  border: 1px solid #dce5dc;
+  border-radius: 12px;
+  background: #fff;
+}
+.booth {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  color: #164832;
+  background: #e7f2e4;
+}
+.booth small { font-size: 12px; line-height: 1.3; }
+.booth strong { font-size: 29px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.company { margin: 0; font-weight: 700; font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
+.empty-state { border: 1px dashed #bdcec1; border-radius: 12px; padding: 16px; color: #435f50; }
+.empty-state p { margin: 0; font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 560px) {
+  .shell { width: calc(100% - 28px); }
+  .masthead { min-height: 61px; }
+  .hero { min-height: 177px; padding: 29px 20px 49px; border-radius: 17px; }
+  .hero p { font-size: 14px; }
+  .booth-art { right: -39px; top: 20px; width: 134px; gap: 7px; opacity: .38; }
+  .booth-art span { border-radius: 7px; }
+  .search-card { margin: -23px 7px 0; padding: 17px 13px 15px; border-radius: 13px; }
+  .search-row { gap: 7px; }
+  .input-wrap { gap: 8px; padding: 0 5px 0 10px; min-height: 49px; }
+  input { min-height: 47px; }
+  .clear-button { width: 29px; }
+  .search-button { min-width: 61px; padding: 0 10px; }
+  .results { margin: 18px 7px 0; }
+  .result-item { grid-template-columns: 69px minmax(0, 1fr); gap: 11px; padding: 9px 11px 9px 9px; }
+  .booth strong { font-size: 25px; }
+  .company { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+  <header class="masthead shell">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      招聘双选会
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <h1 id="page-title">展位查询</h1>
+        <p>输入单位全称或名称中的几个字。</p>
+      </div>
+      <div class="booth-art" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span class="booth-highlight"></span><span></span>
+      </div>
+    </section>
+
+    <section class="search-card" aria-label="按单位名称查找展位">
+      <form id="booth-search" role="search" novalidate>
+        <label for="company-input">单位名称</label>
+        <div class="search-row">
+          <div class="input-wrap">
+            <span class="magnifier" aria-hidden="true"></span>
+            <input id="company-input" name="company" type="search" placeholder="输入单位名称或关键词" maxlength="100" autocomplete="off" spellcheck="false" enterkeyhint="search" required>
+            <button class="clear-button" type="button" id="clear-search" aria-label="清空搜索" hidden>×</button>
+          </div>
+          <button class="search-button" type="submit">查询</button>
+        </div>
+        <p class="form-message" id="form-message" role="alert" hidden></p>
+      </form>
+
+      <div class="examples" aria-label="搜索示例">
+        <span>搜索示例</span>
+        <button type="button" data-example="长安汽车">长安汽车</button>
+        <button type="button" data-example="瑞幸咖啡">瑞幸咖啡</button>
+        <button type="button" data-example="赛力斯">赛力斯</button>
+      </div>
+      <noscript><p class="form-message">请在支持 JavaScript 的浏览器中打开查询页。</p></noscript>
+    </section>
+
+    <section class="results" aria-label="查询结果">
+      <p id="result-status" class="result-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <ul id="result-list" class="result-list" hidden></ul>
+      <div id="no-results" class="empty-state" hidden>
+        <p>试试输入单位名称中的几个字，或联系现场工作人员。</p>
+      </div>
+    </section>
+  </main>
+<script>
+window.BOOTH_DIRECTORY = [
+  ["A1", "重疆无人机科技（重庆）有限公司"],
+  ["A2", "重庆金少榜学生校外托管服务有限公司"],
+  ["A3", "重庆统略人力资源管理有限责任公司"],
+  ["A4", "鹏城通达（深圳）交通轨道有限公司"],
+  ["A5", "中运铁路运营管理（云南）有限公司重庆分公司"],
+  ["A6", "重庆康承人力资源服务有限公司"],
+  ["A7", "深圳市乾瑞轨道交通科技有限公司"],
+  ["A8", "贵州联铁铁路运输有限公司"],
+  ["A9", "上海羿铁轨道交通有限公司"],
+  ["A15", "航铁（四川）教育管理有限公司"],
+  ["A16", "成都蔚蓝长龙教育咨询公司"],
+  ["A17", "上海鲲鹏环宇航空服务有限公司"],
+  ["A18", "北京华啸网络科技有限公司重庆永川分公司"],
+  ["A19", "四川敖畅航空科技有限公司"],
+  ["A20", "中国国际航空股份有限公司"],
+  ["A21", "重庆业好云洁建筑劳务有限公司"],
+  ["A22", "中国大地财产保险股份有限公司重庆分公司"],
+  ["A23", "重庆国宾渝姐教育咨询有限公司"],
+  ["A24", "重庆准点家政服务有限责任公司"],
+  ["A25", "广东铁英人才发展有限公司"],
+  ["A26", "重庆金芙美企业管理咨询有限公司"],
+  ["A27", "广东英维克技术有限公司"],
+  ["A28", "深圳市信维通信股份有限公司"],
+  ["A29", "重庆杰诚智享科技有限公司"],
+  ["A30", "辽宁广凌船舶运输有限公司"],
+  ["A31", "重庆瀚航低空产业发展有限公司"],
+  ["A32", "江苏华安卫士保安服务有限公司"],
+  ["A33", "重庆京东方显示照明有限公司"],
+  ["A34", "重庆广数机器人有限公司"],
+  ["B1", "重庆启量文化传媒有限责任公司"],
+  ["B2", "浙江甘霖汇大酒店有限公司"],
+  ["B3", "华天科技（南京）有限公司"],
+  ["B4", "常州移远通信技术有限公司"],
+  ["B5", "重庆若柠网络传媒有限公司"],
+  ["B6", "深圳市博众世纪生物科技有限公司"],
+  ["B7", "中能策源（四川）信息技术咨询有限公司"],
+  ["B8", "蜂巢能源科技（成都）有限公司"],
+  ["B9", "南昌欣旺达新能源有限公司"],
+  ["B10", "重庆瀚海星辰文化传媒有限公司"],
+  ["B11", "滁州惠科光电科技有限公司"],
+  ["B12", "重庆飞迅标信息科技有限公司"],
+  ["B13", "成都天马微电子有限公司"],
+  ["B14", "重庆金康动力新能源有限公司"],
+  ["B15", "上海施耐德配电电器有限公司"],
+  ["B16", "上汽通用五菱汽车股份有限公司重庆分公司"],
+  ["B17", "重庆大江动力设备制造有限公司"],
+  ["B18", "上海大众联合汽车改装有限公司"],
+  ["B19", "成都合亿汇能科技有限公司"],
+  ["B20", "深圳市嘉熠精密自动化科技有限公司"],
+  ["B21", "重庆念惠科科技有限公司"],
+  ["B22", "重庆欣胜达紧急救援服务有限公司"],
+  ["B23", "四川巨格科技有限责任公司"],
+  ["B24", "重庆东矩金属制品有限公司"],
+  ["B25", "深圳市安科讯电子制造有限公司"],
+  ["B26", "重庆安来动力机械有限公司"],
+  ["B27", "宁波健信机械有限公司"],
+  ["B28", "重庆冠宇电池有限公司"],
+  ["B29", "重庆维景酒店有限责任公司"],
+  ["B30", "重庆勇芳装饰设计工程有限公司"],
+  ["B31", "四川喜之郎食品有限公司"],
+  ["B32", "重庆人和数据研究院有限公司"],
+  ["B33", "招商局新材料科技（重庆）有限公司"],
+  ["B34", "赛力斯汽车有限公司"],
+  ["C1", "重庆长信实业有限公司"],
+  ["C2", "重庆津住汽车线束有限公司"],
+  ["C3", "潮州三环（集团）股份有限公司"],
+  ["C4", "重庆璀璨星途文化传媒有限公司"],
+  ["C5", "重庆景阔文化传媒有限公司"],
+  ["C6", "重庆本果传媒科技有限公司"],
+  ["C7", "重庆潼恩智能科技有限公司"],
+  ["C8", "重庆砻锐科技有限公司"],
+  ["C9", "重庆乐尤网络科技有限公司"],
+  ["C10", "普罗斯通信技术(苏州)有限公司"],
+  ["C11", "四川明泰微电子有限公司"],
+  ["C12", "上海浩促电子科技有限公司"],
+  ["C13", "深圳市富创优越科技有限公司"],
+  ["C14", "重庆兴隆欣智能装备有限公司"],
+  ["C15", "无锡小天鹅电器有限公司"],
+  ["C16", "重庆海尔洗衣机有限公司"],
+  ["C17", "重庆长安汽车股份有限公司"],
+  ["C18", "四川华丰科技股份有限公司"],
+  ["C19", "胜宏科技（惠州）股份有限公司"],
+  ["C20", "重庆邦瑞汽车贸易有限公司"],
+  ["C21", "达亮电子（滁州）有限公司"],
+  ["C22", "重庆臻上网络科技有限公司"],
+  ["C23", "瑞幸咖啡（重庆）有限公司"],
+  ["C24", "芜湖长信科技股份有限公司"],
+  ["C25", "苏州清陶动力科技有限公司"],
+  ["C26", "重庆恒播互娱传媒集团有限公司"],
+  ["C27", "重庆中能诺德商贸有限责任公司"],
+  ["C28", "泉州三安半导体科技有限公司"],
+  ["C29", "重庆西南铝铝材生产开发股份有限公司"],
+  ["C30", "重庆鸿源智创工程技术有限公司"],
+  ["C31", "深圳数码模科技集团有限公司"],
+  ["C32", "重庆鑫源农机股份有限公司"],
+  ["C33", "奇瑞控股集团有限公司"],
+  ["C34", "长城汽车股份有限公司重庆分公司"],
+  ["D1", "上海尖点精密工具有限公司"],
+  ["D2", "江苏瑞尔隆鼎实业有限公司"],
+  ["D3", "重庆京东方晶远科技有限公司"],
+  ["D4", "卧龙电气驱动集团股份有限公司"],
+  ["D5", "重庆恒拓高自动化技术有限公司"],
+  ["D6", "重庆高开电力设备有限公司"],
+  ["D7", "蜂巢传动系统（江苏）有限公司"],
+  ["D8", "宁德壹连电子有限公司"],
+  ["D9", "重庆万泰电力科技有限公司"],
+  ["D10", "重庆渝涂科技有限公司"],
+  ["D11", "重庆顺多利机车有限责任公司"],
+  ["D12", "重庆理工清研凌创测控科技有限公司"],
+  ["D13", "豪达（浙江）汽车配件有限公司"],
+  ["D14", "重庆御寰实业发展有限公司第一分公司"],
+  ["D15", "卡斯特铝（重庆）科技有限公司"],
+  ["D16", "奇瑞汽车股份有限公司"],
+  ["D17", "芜湖美智空调设备有限公司"],
+  ["D18", "重庆永川爱尔眼科医院有限公司"],
+  ["D19", "重庆街角文化传媒有限公司"],
+  ["D20", "重庆洪林健康管理咨询有限公司"],
+  ["D21", "北京乡村基兴聪餐饮管理有限公司"],
+  ["D22", "重庆电连电子技术有限公司"],
+  ["D23", "重庆万星璀璨网络传媒有限公司"],
+  ["D24", "锐瀚时空（重庆）传媒科技有限公司"],
+  ["D25", "深圳市深技电子有限公司"],
+  ["D26", "深圳长城开发精密技术有限公司"],
+  ["D27", "重庆音浪网络传媒有限公司"],
+  ["D28", "重庆创宇后天信息技术有限公司"],
+  ["D29", "科太精密工业（深圳）有限公司"],
+  ["D30", "重庆银盛汽车销售有限公司"],
+  ["D31", "重庆大江杰信锻造有限公司"],
+  ["D32", "重庆华世丹动力科技有限公司"],
+  ["D33", "重庆长安民生物流股份有限公司"],
+  ["D34", "赛力斯动力"],
+  ["E1", "北京爱奇艺科技有限公司重庆分公司"],
+  ["E2", "重庆汇晨物流有限公司"],
+  ["E3", "中创新航新能源（厦门）有限公司"],
+  ["E4", "珠海斗门超毅实业有限公司"],
+  ["E5", "重庆万汇唐卡装饰工程有限公司"],
+  ["E6", "深圳市蔚蓝时代商业管理有限公司重庆分公司"],
+  ["E7", "上海鲸巢供应链科技有限公司"],
+  ["E8", "维沃移动通信（重庆）有限公司"],
+  ["E9", "重庆唐卡装饰工程集团有限公司"],
+  ["E10", "湖北智慧光子技术有限公司"],
+  ["E11", "重庆圣雅菲生命健康科技有限公司"],
+  ["E12", "四川省中能数智健康管理有限责任公司"],
+  ["E13", "四川皓帆科技有限公司"],
+  ["E14", "重庆广雨住房租赁有限公司"],
+  ["E15", "钛虎机器人科技（上海）有限公司"],
+  ["E16", "重庆鑫源智造科技股份有限公司"],
+  ["E17", "奇瑞新能源汽车股份有限公司"],
+  ["E18", "东莞长城开发科技有限公司"],
+  ["E19", "芜湖埃科动力系统有限公司"],
+  ["E20", "精华电子（苏州）有限公司"],
+  ["E21", "宁波环球广电科技有限公司"],
+  ["E22", "浙江三花汽车零部件有限公司"],
+  ["E23", "四川戎威保安服务有限责任公司"],
+  ["E24", "重庆卓越际联科技有限公司"],
+  ["E25", "深圳和而泰智能控制股份有限公司"],
+  ["E26", "重庆隆祥汽车销售服务有限公司"],
+  ["E27", "四川金朋工程管理咨询有限责任公司"],
+  ["E28", "重庆海康威视科技有限公司"],
+  ["E29", "旭硕科技（重庆）有限公司"],
+  ["E30", "重庆江杉文化传媒有限公司"],
+  ["E31", "菽乡(重庆)农业科技有限责任公司"],
+  ["E32", "中交一公局重庆城市建设发展有限公司重庆中交豪生大酒店分公司"],
+  ["E33", "华强方特（自贡）旅游发展有限公司"],
+  ["E34", "重庆渝江压铸股份有限公司"],
+  ["F1", "万怡物业服务有限公司"],
+  ["F2", "国巨电子（中国）有限公司"],
+  ["F3", "重庆旨利康科技有限公司"],
+  ["F4", "宜宾市美捷通讯科技有限公司"],
+  ["F5", "江苏营财安保股份有限公司"],
+  ["F6", "重庆优品甄选贸易有限公司"],
+  ["F7", "重庆牛必牛供应链管理有限公司"],
+  ["F8", "临海市东州文化旅游有限公司"],
+  ["F9", "聘科信息技术（苏州）有限公司"],
+  ["F10", "星寰传媒（重庆）有限公司"],
+  ["F11", "重庆山语初晴传媒有限公司"],
+  ["F12", "广州市优师科教投资有限公司"],
+  ["F13", "重庆初音几何网络传媒有限公司"],
+  ["F14", "重庆热娱文化传媒有限公司"],
+  ["F15", "重庆睿优精密铸造股份有限公司"],
+  ["F16", "北汽蓝谷麦格纳汽车有限公司"],
+  ["F17", "中铁宝桥（舟山）有限公司"],
+  ["F18", "重庆枇杷树文化传媒有限公司"],
+  ["F19", "重庆宝利阳文化传播有限公司福朋喜来登酒店分公司"],
+  ["F20", "贝贝佳幼儿园"],
+  ["F21", "重庆和嘉雅悦酒店管理有限公司"],
+  ["F22", "重庆易阅科技有限公司"],
+  ["F23", "杭州无忧传媒有限公司"],
+  ["F24", "首都医科大学附属北京安贞医院"],
+  ["F25", "广东欣德大健康科技集团有限公司"],
+  ["F26", "永川区芯沐传媒"],
+  ["F27", "四川齐博法律咨询服务有限公司重庆分公司"],
+  ["F28", "重庆源康禾商贸有限公司"],
+  ["F29", "两江新区优净泉美容美体中心"],
+  ["F30", "重庆市靓康园医药有限公司"],
+  ["F31", "重庆华胤隆企业管理有限公司"],
+  ["F32", "重庆哔哩吧啦文化传媒有限公司"],
+  ["F33", "重庆通邑卫士智慧生活服务有限公司"],
+  ["F34", "溧阳市溧奥电梯安装有限公司"]
+];
+(function () {
+  "use strict";
+
+  const form = document.getElementById("booth-search");
+  const input = document.getElementById("company-input");
+  const clear = document.getElementById("clear-search");
+  const message = document.getElementById("form-message");
+  const status = document.getElementById("result-status");
+  const list = document.getElementById("result-list");
+  const empty = document.getElementById("no-results");
+  const examples = document.querySelectorAll("[data-example]");
+
+  if (!Array.isArray(window.BOOTH_DIRECTORY)) {
+    status.textContent = "展位表加载失败，请刷新页面后重试。";
+    return;
+  }
+
+  function normalize(text) {
+    return text.normalize("NFKC").toLowerCase().replace(/[\s()[\]【】·•・.,、\-—_\u200b]/g, "");
+  }
+
+  const directory = window.BOOTH_DIRECTORY.map(function (row, index) {
+    return { booth: row[0], company: row[1], nameKey: normalize(row[1]), index: index };
+  });
+  let composing = false;
+
+  function search(text) {
+    const key = normalize(text);
+    if (!key) return [];
+    const terms = text.trim().split(/\s+/).map(normalize).filter(Boolean);
+    const matches = [];
+    directory.forEach(function (item) {
+      const name = item.nameKey;
+      if (name === key) matches.push({ item: item, rank: 0 });
+      else if (name.startsWith(key)) matches.push({ item: item, rank: 1 });
+      else if (name.includes(key)) matches.push({ item: item, rank: 2 });
+      else if (terms.length > 1 && terms.every(function (term) { return name.includes(term); })) {
+        matches.push({ item: item, rank: 3 });
+      }
+    });
+    return matches.sort(function (a, b) {
+      return a.rank - b.rank || a.item.index - b.item.index;
+    }).map(function (match) { return match.item; });
+  }
+
+  function resultItem(item) {
+    const row = document.createElement("li");
+    row.className = "result-item";
+    const badge = document.createElement("div");
+    badge.className = "booth";
+    const label = document.createElement("small");
+    label.textContent = "展位号";
+    const number = document.createElement("strong");
+    number.textContent = item.booth;
+    badge.append(label, number);
+    const name = document.createElement("p");
+    name.className = "company";
+    name.textContent = item.company;
+    row.append(badge, name);
+    return row;
+  }
+
+  function render() {
+    const value = input.value;
+    clear.hidden = value.length === 0;
+    message.hidden = true;
+    input.removeAttribute("aria-invalid");
+    list.textContent = "";
+    list.hidden = true;
+    empty.hidden = true;
+
+    if (!normalize(value)) {
+      status.textContent = "已收录 " + directory.length + " 家参会单位";
+      return;
+    }
+
+    const matches = search(value);
+    if (!matches.length) {
+      status.textContent = "未找到匹配的单位";
+      empty.hidden = false;
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    matches.forEach(function (item) { fragment.appendChild(resultItem(item)); });
+    list.appendChild(fragment);
+    list.hidden = false;
+    status.textContent = "找到 " + matches.length + " 家单位";
+  }
+
+  input.addEventListener("compositionstart", function () { composing = true; });
+  input.addEventListener("compositionend", function () { composing = false; render(); });
+  input.addEventListener("input", function (event) { if (!composing && !event.isComposing) render(); });
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (composing) return;
+    render();
+    if (!normalize(input.value)) {
+      input.setAttribute("aria-invalid", "true");
+      message.textContent = "请输入单位名称。";
+      message.hidden = false;
+      input.focus();
+      return;
+    }
+    input.blur();
+  });
+  clear.addEventListener("click", function () { input.value = ""; render(); input.focus(); });
+  examples.forEach(function (button) {
+    button.addEventListener("click", function () { input.value = button.dataset.example; render(); });
+  });
+
+  render();
+}());
+</script>
+</body>
+</html>
