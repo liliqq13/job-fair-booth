@@ -14,7 +14,10 @@ on:
         type: string
   push:
     branches: [main]
-    paths: [index.html]
+    paths:
+      - index.html
+      - .github/workflows/add-exhibitor.yml
+      - .github/scripts/add_exhibitor.py
 
 permissions: {}
 
@@ -26,15 +29,17 @@ concurrency:
 jobs:
   add:
     name: 校验并添加单位
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        if: github.event_name == 'workflow_dispatch'
         with:
           ref: main
       - name: 校验并保存展位数据
+        if: github.event_name == 'workflow_dispatch'
         env:
           COMPANY_NAME: ${{ inputs.company }}
           BOOTH_CODE: ${{ inputs.booth }}
@@ -50,7 +55,6 @@ jobs:
   build:
     name: 准备公开查询页
     needs: add
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.add.result == 'success' || needs.add.result == 'skipped') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
