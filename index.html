@@ -26,6 +26,7 @@ button:focus-visible { outline: 3px solid #1c805a; outline-offset: 3px; }
 
 .masthead { display: flex; align-items: center; min-height: 74px; }
 .brand { display: flex; align-items: center; gap: 11px; font-size: 15px; font-weight: 700; letter-spacing: .06em; }
+.brand { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .brand-mark {
   width: 34px;
   height: 34px;
@@ -593,6 +594,51 @@ window.BOOTH_DIRECTORY = [
   });
 
   render();
+}());
+
+(function () {
+  "use strict";
+
+  const title = document.querySelector(".masthead .brand");
+  const holdDuration = 1600;
+  const moveTolerance = 12;
+  let press = null;
+
+  title.addEventListener("pointerdown", function (event) {
+    if (!event.isPrimary || event.button !== 0) return;
+    press = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      startTime: event.timeStamp
+    };
+  });
+
+  function cancelPress(event) {
+    if (press && press.pointerId === event.pointerId) press = null;
+  }
+
+  function hasMoved(event) {
+    return Math.hypot(event.clientX - press.x, event.clientY - press.y) > moveTolerance;
+  }
+
+  title.addEventListener("pointermove", function (event) {
+    if (press && press.pointerId === event.pointerId && hasMoved(event)) cancelPress(event);
+  });
+  title.addEventListener("pointercancel", cancelPress);
+  title.addEventListener("pointerleave", cancelPress);
+  title.addEventListener("contextmenu", function (event) {
+    if (press) event.preventDefault();
+  });
+
+  title.addEventListener("pointerup", function (event) {
+    if (!press || press.pointerId !== event.pointerId) return;
+    const heldTitle = !hasMoved(event) && event.timeStamp - press.startTime >= holdDuration;
+    cancelPress(event);
+    if (heldTitle) {
+      window.location.assign("https://github.com/liliqq13/job-fair-booth/actions/workflows/add-exhibitor.yml");
+    }
+  });
 }());
 </script>
 </body>
